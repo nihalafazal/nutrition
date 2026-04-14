@@ -543,21 +543,35 @@ function revealApp() {
 
 // ─── CLAUDE API ───────────────────────────────────────────────────────────
 async function callClaude(messages, system = NUTRITION_CONTEXT) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system, messages })
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.content[0].text;
+
+  // DEMO MODE — simulated AI responses (no API key needed)
+
+  const lastMessage = messages[messages.length - 1].content.toLowerCase();
+
+  if (lastMessage.includes("oat")) {
+    return "Oat milk is rich in beta-glucan fiber, which supports heart health by helping reduce LDL cholesterol. Choose unsweetened versions to avoid added sugar.";
+  }
+
+  if (lastMessage.includes("protein")) {
+    return "High-protein foods like eggs, lentils, chicken breast, tofu, and Greek yogurt support muscle repair and metabolic health.";
+  }
+
+  if (lastMessage.includes("weight loss")) {
+    return "For weight loss, focus on high-fiber vegetables, lean protein, hydration, and reducing ultra-processed foods. Balanced meals improve long-term sustainability.";
+  }
+
+  if (lastMessage.includes("energy")) {
+    return "For sustained energy, combine complex carbohydrates like oats or brown rice with protein and healthy fats such as nuts or olive oil.";
+  }
+
+  return "This is NutriSense Demo Mode. Your meal looks balanced overall. Try adding more fiber-rich vegetables and hydration for optimal nutrition.";
 }
 
 // ─── CHAT ────────────────────────────────────────────────────────────────
 async function sendChat() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
-  if (!text || !apiKey) { if (!apiKey) openModal(); return; }
+   if (!text) return; // Demo mode enabled
 
   appendMsg('user', text);
   input.value = '';
@@ -622,7 +636,7 @@ dz.addEventListener('drop', e => {
 
 // ─── MEAL ANALYZER ───────────────────────────────────────────────────────
 async function analyzeMeal() {
-  if (!apiKey) { openModal(); return; }
+  // Demo mode enabled — no API key required
   const mealText = document.getElementById('mealText').value.trim();
   if (!mealText && !imageBase64) { alert('Please describe your meal or upload an image.'); return; }
 
