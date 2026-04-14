@@ -1,307 +1,725 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>NutriSense AI</title>
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NutriSense AI — Your Personal Food Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
+  :root {
+    --soil: #1a1208;
+    --bark: #2d2010;
+    --moss: #3d4a1e;
+    --sage: #6b7c3a;
+    --fern: #8fa44a;
+    --lime: #c5d96b;
+    --cream: #f5f0e8;
+    --parchment: #ede5d0;
+    --warm: #d4a96a;
+    --rust: #b85c2a;
+    --clay: #c47a45;
+    --mist: rgba(245,240,232,0.06);
+    --glow: rgba(197,217,107,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-font-family:Arial;
-margin:0;
-background:#f4f7f5;
-}
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--soil);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-header{
-background:#2e7d66;
-color:white;
-padding:20px;
-text-align:center;
-font-size:22px;
-}
+  /* BG texture */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 15% 10%, rgba(107,124,58,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 85% 90%, rgba(180,92,42,0.12) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
 
-nav{
-display:flex;
-justify-content:center;
-gap:20px;
-background:#e2ece7;
-padding:15px;
-}
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    background: rgba(26,18,8,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(197,217,107,0.12);
+    z-index: 100;
+  }
+  .nav-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--lime);
+    letter-spacing: -0.03em;
+  }
+  .nav-brand span { color: var(--warm); }
+  .nav-tabs { display: flex; gap: 0.25rem; }
+  .nav-tab {
+    padding: 0.45rem 1rem;
+    border-radius: 20px;
+    border: none; background: transparent;
+    color: rgba(245,240,232,0.5);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-tab:hover { color: var(--cream); background: var(--mist); }
+  .nav-tab.active { background: var(--glow); color: var(--lime); }
+  .nav-badge {
+    font-size: 0.65rem; padding: 0.2rem 0.55rem;
+    background: var(--moss); color: var(--lime);
+    border-radius: 10px; margin-left: 0.4rem;
+  }
 
-.tabbtn{
-padding:10px 20px;
-border:none;
-background:#2e7d66;
-color:white;
-cursor:pointer;
-border-radius:8px;
-}
+  /* MAIN */
+  main { padding-top: 80px; position: relative; z-index: 1; }
 
-.tabbtn:hover{
-background:#1e5a49;
-}
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--sage);
+    border: 1px solid rgba(107,124,58,0.35);
+    padding: 0.35rem 1rem; border-radius: 20px;
+    margin-bottom: 1.8rem;
+  }
+  .hero-eyebrow::before { content: '●'; color: var(--lime); font-size: 0.5rem; }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--lime); }
+  .hero-sub {
+    max-width: 520px; margin: 0 auto 2.5rem;
+    font-size: 1.05rem; font-weight: 300;
+    color: rgba(245,240,232,0.6); line-height: 1.7;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--lime); color: var(--soil);
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-weight: 600; font-size: 0.9rem;
+    border: none; cursor: pointer;
+    transition: all 0.25s; letter-spacing: 0.01em;
+  }
+  .hero-cta:hover { background: #d4e87a; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(197,217,107,0.3); }
 
-.section{
-display:none;
-padding:40px;
-max-width:900px;
-margin:auto;
-}
+  /* PANELS */
+  .panels {
+    display: none;
+    max-width: 960px; margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+  .panels.visible { display: block; }
 
-.active{
-display:block;
-}
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem; font-weight: 600;
+    color: var(--cream); margin-bottom: 0.4rem;
+  }
+  .section-sub {
+    font-size: 0.85rem; color: rgba(245,240,232,0.45);
+    margin-bottom: 1.5rem;
+  }
 
-input,textarea{
-width:90%;
-padding:12px;
-margin-top:10px;
-border-radius:6px;
-border:1px solid #ccc;
-}
+  /* CHAT */
+  .chat-wrap {
+    background: var(--bark);
+    border: 1px solid rgba(197,217,107,0.1);
+    border-radius: 20px; overflow: hidden;
+  }
+  .chat-messages {
+    height: 380px; overflow-y: auto;
+    padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;
+    scrollbar-width: thin; scrollbar-color: var(--moss) transparent;
+  }
+  .msg {
+    max-width: 82%; padding: 0.85rem 1.1rem;
+    border-radius: 16px; font-size: 0.9rem; line-height: 1.65;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+  .msg.user {
+    align-self: flex-end;
+    background: var(--moss); color: var(--cream);
+    border-bottom-right-radius: 4px;
+  }
+  .msg.ai {
+    align-self: flex-start;
+    background: rgba(245,240,232,0.07); color: var(--parchment);
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(197,217,107,0.1);
+  }
+  .msg.ai .ai-label {
+    font-size: 0.68rem; font-weight: 600; color: var(--lime);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+  .chat-input-row {
+    display: flex; gap: 0.75rem;
+    padding: 1rem 1.2rem;
+    border-top: 1px solid rgba(197,217,107,0.08);
+    background: rgba(26,18,8,0.5);
+  }
+  .chat-input {
+    flex: 1; background: rgba(245,240,232,0.06);
+    border: 1px solid rgba(197,217,107,0.15);
+    border-radius: 12px; padding: 0.75rem 1rem;
+    color: var(--cream); font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; outline: none; resize: none;
+    min-height: 46px; max-height: 120px;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: rgba(197,217,107,0.4); }
+  .chat-input::placeholder { color: rgba(245,240,232,0.3); }
+  .send-btn {
+    background: var(--lime); color: var(--soil);
+    border: none; border-radius: 12px;
+    padding: 0 1.2rem; font-weight: 600;
+    font-size: 1.1rem; cursor: pointer;
+    transition: all 0.2s; align-self: flex-end; height: 46px;
+  }
+  .send-btn:hover { background: #d4e87a; }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-button.action{
-margin-top:15px;
-padding:10px 25px;
-background:#2e7d66;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
+  /* ANALYZER GRID */
+  .analyze-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  @media(max-width:680px){ .analyze-grid { grid-template-columns: 1fr; } }
 
-button.action:hover{
-background:#1e5a49;
-}
+  .card {
+    background: var(--bark);
+    border: 1px solid rgba(197,217,107,0.1);
+    border-radius: 20px; padding: 1.5rem;
+  }
+  .card-label {
+    font-size: 0.72rem; font-weight: 600; color: var(--sage);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem;
+  }
 
-.result{
-margin-top:25px;
-background:white;
-padding:20px;
-border-radius:8px;
-box-shadow:0px 2px 8px rgba(0,0,0,0.1);
-}
+  .meal-textarea {
+    width: 100%; background: rgba(245,240,232,0.05);
+    border: 1px solid rgba(197,217,107,0.15);
+    border-radius: 12px; padding: 0.85rem;
+    color: var(--cream); font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; resize: none; height: 120px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .meal-textarea:focus { border-color: rgba(197,217,107,0.4); }
+  .meal-textarea::placeholder { color: rgba(245,240,232,0.25); }
 
+  .image-drop {
+    border: 2px dashed rgba(197,217,107,0.2);
+    border-radius: 12px; padding: 2rem;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; position: relative;
+    background: rgba(197,217,107,0.03);
+  }
+  .image-drop:hover, .image-drop.dragover {
+    border-color: rgba(197,217,107,0.5);
+    background: rgba(197,217,107,0.07);
+  }
+  .image-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .image-drop .drop-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .image-drop p { font-size: 0.82rem; color: rgba(245,240,232,0.4); }
+  #img-preview {
+    width: 100%; border-radius: 10px; margin-top: 0.75rem;
+    display: none; max-height: 160px; object-fit: cover;
+  }
+
+  .analyze-btn {
+    width: 100%; margin-top: 1rem;
+    background: var(--lime); color: var(--soil);
+    border: none; border-radius: 12px; padding: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 0.9rem;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.01em;
+  }
+  .analyze-btn:hover { background: #d4e87a; }
+  .analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* SCORE CARD */
+  .score-card {
+    grid-column: 1 / -1;
+    background: var(--bark);
+    border: 1px solid rgba(197,217,107,0.1);
+    border-radius: 20px; padding: 1.8rem;
+    display: none;
+  }
+  .score-card.visible { display: block; animation: fadeUp 0.4s ease; }
+  .score-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem; color: var(--lime); margin-bottom: 1.2rem;
+  }
+  .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.2rem; }
+  @media(max-width:600px){ .score-grid { grid-template-columns: repeat(2,1fr); } }
+  .score-item { text-align: center; }
+  .score-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem; font-weight: 900; color: var(--lime);
+  }
+  .score-num.warn { color: var(--clay); }
+  .score-num.bad { color: var(--rust); }
+  .score-lbl { font-size: 0.72rem; color: rgba(245,240,232,0.45); margin-top: 0.2rem; }
+  .score-summary {
+    font-size: 0.88rem; color: var(--parchment);
+    line-height: 1.7; padding-top: 1rem;
+    border-top: 1px solid rgba(197,217,107,0.1);
+  }
+
+  /* RAG */
+  .rag-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+  .rag-tag {
+    padding: 0.35rem 0.85rem; border-radius: 20px;
+    border: 1px solid rgba(197,217,107,0.2);
+    font-size: 0.78rem; color: var(--sage);
+    cursor: pointer; transition: all 0.2s; background: transparent;
+  }
+  .rag-tag:hover { background: var(--glow); color: var(--lime); border-color: var(--lime); }
+
+  .rag-answer {
+    background: rgba(197,217,107,0.05);
+    border: 1px solid rgba(197,217,107,0.12);
+    border-radius: 14px; padding: 1.2rem;
+    font-size: 0.9rem; line-height: 1.7;
+    color: var(--parchment); display: none;
+    animation: fadeUp 0.3s ease;
+  }
+  .rag-answer.visible { display: block; }
+
+  /* LOADING SPINNER */
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(26,18,8,0.3);
+    border-top-color: var(--soil);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle; margin-right: 0.4rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TABS content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.75rem; color: rgba(245,240,232,0.2);
+    border-top: 1px solid rgba(197,217,107,0.06);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--moss); border-radius: 4px; }
+
+  /* API key modal */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(10,8,4,0.85);
+    z-index: 200; display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  .modal {
+    background: var(--bark); border: 1px solid rgba(197,217,107,0.2);
+    border-radius: 24px; padding: 2.5rem; max-width: 440px; width: 90%;
+    animation: fadeUp 0.35s ease;
+  }
+  .modal h2 {
+    font-family: 'Fraunces', serif; font-size: 1.6rem;
+    color: var(--cream); margin-bottom: 0.5rem;
+  }
+  .modal p { font-size: 0.85rem; color: rgba(245,240,232,0.5); margin-bottom: 1.5rem; line-height: 1.6; }
+  .modal input {
+    width: 100%; background: rgba(245,240,232,0.06);
+    border: 1px solid rgba(197,217,107,0.2);
+    border-radius: 12px; padding: 0.85rem 1rem;
+    color: var(--cream); font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; outline: none; margin-bottom: 1rem;
+  }
+  .modal input:focus { border-color: rgba(197,217,107,0.5); }
+  .modal-btn {
+    width: 100%; background: var(--lime); color: var(--soil);
+    border: none; border-radius: 12px; padding: 0.9rem;
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    font-size: 0.9rem; cursor: pointer; transition: background 0.2s;
+  }
+  .modal-btn:hover { background: #d4e87a; }
+  .modal-note { font-size: 0.72rem; color: rgba(245,240,232,0.25); margin-top: 0.75rem; text-align: center; }
 </style>
-
 </head>
-
 <body>
 
-<header>
-NutriSense AI 🍎 Smart Nutrition Assistant
-</header>
+<!-- API KEY MODAL -->
+<div class="modal-bg" id="apiModal">
+  <div class="modal">
+    <h2>Welcome to <span style="color:var(--lime)">NutriSense</span></h2>
+    <p>Enter your Anthropic API key to power the AI features. Your key is stored only in your browser session — never sent to any server except Anthropic's.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+    <button class="modal-btn" onclick="saveKey()">Start Analyzing →</button>
+    <p class="modal-note">Get a free key at console.anthropic.com</p>
+  </div>
+</div>
 
-
+<!-- NAV -->
 <nav>
+  <div class="nav-brand">Nutri<span>Sense</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('chat')">💬 Chat</button>
+    <button class="nav-tab" onclick="switchTab('analyze')">🔍 Analyze</button>
+    <button class="nav-tab" onclick="switchTab('rag')">📚 Knowledge</button>
 
-<button class="tabbtn" onclick="switchTab('chat')">Chat</button>
-
-<button class="tabbtn" onclick="switchTab('analyzer')">Meal Analyzer</button>
-
-<button class="tabbtn" onclick="switchTab('knowledge')">Knowledge</button>
-
+  </div>
 </nav>
 
+<main>
+  <!-- HERO -->
+  <section class="hero" id="heroSection">
+    <div class="hero-eyebrow">AI-Powered Food Intelligence</div>
+    <h1>Know what you<br/><em>really</em> eat</h1>
+    <p class="hero-sub">Chat with an AI nutritionist, analyze any meal, and get science-backed lifestyle insights — all in your browser.</p>
+    <button class="hero-cta" onclick="revealApp()">
+      <span>🥗</span> Start Your Journey
+    </button>
+  </section>
 
+  <!-- APP PANELS -->
+  <div class="panels" id="appPanels">
 
-<!-- CHAT TAB -->
+    <!-- CHAT TAB -->
+    <div class="tab-content active" id="tab-chat">
+      <p class="section-title">AI Nutritionist</p>
+      <p class="section-sub">Ask anything about food, nutrition, diets, lifestyle, or meal planning.</p>
+      <div class="chat-wrap">
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg ai">
+            <div class="ai-label">NutriSense AI</div>
+            Hello! I'm your personal AI nutritionist. Ask me anything — meal ideas, macros, diet plans, gut health, intermittent fasting, or what that ingredient actually does to your body. 🥦
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chatInput" placeholder="e.g. Is oat milk better than almond milk?" rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendChat()">↑</button>
+        </div>
+      </div>
+    </div>
 
-<div id="chat" class="section active">
+    <!-- ANALYZE TAB -->
+    <div class="tab-content" id="tab-analyze">
+      <p class="section-title">Meal Analyzer</p>
+      <p class="section-sub">Describe your meal or upload a photo. Get nutrition scores, insights & suggestions.</p>
+      <div class="analyze-grid">
+        <div class="card">
+          <div class="card-label">Describe Your Meal</div>
+          <textarea class="meal-textarea" id="mealText" placeholder="e.g. Grilled chicken breast with brown rice and a side salad with olive oil dressing..."></textarea>
+        </div>
+        <div class="card">
+          <div class="card-label">Or Upload a Photo</div>
+          <div class="image-drop" id="dropZone">
+            <input type="file" accept="image/*" onchange="handleImage(event)" />
+            <div class="drop-icon">📷</div>
+            <p>Click or drag an image here</p>
+          </div>
+          <img id="img-preview" alt="Meal preview"/>
+        </div>
+        <div style="grid-column:1/-1">
+          <button class="analyze-btn" id="analyzeBtn" onclick="analyzeMeal()">🔍 Analyze My Meal</button>
+        </div>
+        <div class="score-card" id="scoreCard">
+          <div class="score-title">📊 Nutrition Analysis</div>
+          <div class="score-grid" id="scoreGrid"></div>
+          <div class="score-summary" id="scoreSummary"></div>
+        </div>
+      </div>
+    </div>
 
-<h2>Nutrition Chat Assistant</h2>
+    <!-- RAG / KNOWLEDGE TAB -->
+    <div class="tab-content" id="tab-rag">
+      <p class="section-title">Nutrition Knowledge Base</p>
+      <p class="section-sub">Ask from our curated food science library — grounded answers, no hallucinations.</p>
 
-<input id="chatInput" placeholder="Ask something about nutrition">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-label">Quick Questions</div>
+        <div class="rag-tags">
+          <button class="rag-tag" onclick="askRAG(this.innerText)">🫀 Best foods for heart health?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">⚡ Foods that boost energy naturally?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">🧠 Nutrients for brain performance?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">🌙 What to eat before bed?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">💪 High protein meals for muscle gain?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">🌿 Anti-inflammatory diet guide?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">⚖️ How to calculate my daily calories?</button>
+          <button class="rag-tag" onclick="askRAG(this.innerText)">🦠 Gut health and probiotics explained?</button>
+        </div>
+      </div>
 
-<br>
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-label">Ask Your Own Question</div>
+        <div style="display:flex;gap:0.75rem">
+          <input type="text" id="ragInput" placeholder="e.g. Is coffee good for you?"
+            style="flex:1;background:rgba(245,240,232,0.05);border:1px solid rgba(197,217,107,0.15);border-radius:12px;padding:0.75rem 1rem;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;"
+            onkeydown="if(event.key==='Enter')askRAG(document.getElementById('ragInput').value)"/>
+          <button onclick="askRAG(document.getElementById('ragInput').value)"
+            style="background:var(--lime);color:var(--soil);border:none;border-radius:12px;padding:0 1.2rem;font-weight:600;cursor:pointer;">Ask</button>
+        </div>
+      </div>
 
-<button class="action" onclick="sendChat()">Ask</button>
+      <div class="rag-answer" id="ragAnswer"></div>
+    </div>
 
-<div class="result" id="chatResult"></div>
+  </div><!-- end panels -->
+</main>
 
-</div>
-
-
-
-<!-- ANALYZER TAB -->
-
-<div id="analyzer" class="section">
-
-<h2>Meal Analyzer</h2>
-
-<textarea id="mealInput"
-placeholder="Describe your meal (example: rice, chicken, salad)">
-</textarea>
-
-<br>
-
-<button class="action" onclick="analyzeMeal()">
-Analyze Meal
-</button>
-
-<div class="result" id="mealResult"></div>
-
-</div>
-
-
-
-<!-- KNOWLEDGE TAB -->
-
-<div id="knowledge" class="section">
-
-<h2>Nutrition Knowledge Search</h2>
-
-<input id="knowledgeInput"
-placeholder="Search topic (example: vitamin D benefits)">
-
-<br>
-
-<button class="action" onclick="searchKnowledge()">
-Search
-</button>
-
-<div class="result" id="knowledgeResult"></div>
-
-</div>
-
-
+<footer>NutriSense AI · Powered by Claude · Built for CST4625 Hackathon · Your data stays in your browser</footer>
 
 <script>
+// ─── STATE ───────────────────────────────────────────────────────────────
+let apiKey = sessionStorage.getItem('ns_key') || 'AIzaSyBO3BYCAqKn-ns2DZ6YS-XC0bysAy7yncE';
+let chatHistory = [];
+let imageBase64 = null;
 
-const API_KEY =
-"AIzaSyBO3BYCAqKn-ns2DZ6YS-XC0bysAy7yncE";
+const NUTRITION_CONTEXT = `
+You are NutriSense AI, an expert nutritionist and wellness coach embedded in a food intelligence app.
+You have deep knowledge of:
+- Macronutrients (carbs, proteins, fats) and micronutrients (vitamins, minerals)
+- Dietary patterns: Mediterranean, DASH, keto, intermittent fasting, plant-based
+- Gut microbiome, probiotics, prebiotics
+- Anti-inflammatory foods and chronic disease prevention
+- Sports nutrition and recovery
+- Weight management and metabolic health
+- Food labels, additives, and processing levels
+- Meal timing and circadian nutrition
 
+Always give evidence-based, practical, non-judgmental advice.
+Keep answers concise but complete. Use emojis sparingly for warmth.
+Never diagnose medical conditions — suggest seeing a doctor when appropriate.
+`;
 
-function switchTab(tab){
+const RAG_CONTEXT = `
+${NUTRITION_CONTEXT}
 
-window.location.hash = tab;
+KNOWLEDGE BASE — answer ONLY from this grounded context plus your training knowledge.
+Be specific, cite mechanisms where possible (e.g. "because it reduces LDL cholesterol via...").
+Format your answer in clear short paragraphs. End with one concrete actionable tip.
+`;
 
-document.querySelectorAll(".section")
-.forEach(sec => sec.classList.remove("active"));
+// ─── MODAL / KEY ─────────────────────────────────────────────────────────
+function openModal() { document.getElementById('apiModal').style.display = 'flex'; }
+function saveKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k) return alert('Please enter an API key.');
+  apiKey = k;
+  sessionStorage.setItem('ns_key', k);
+  document.getElementById('apiModal').style.display = 'none';
+}
+// Auto-hide if key exists
+if (apiKey) document.getElementById('apiModal').style.display = 'none';
 
-document.getElementById(tab)
-.classList.add("active");
-
+// ─── NAVIGATION ──────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+  revealApp();
+}
+function revealApp() {
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('appPanels').classList.add('visible');
 }
 
-
-
-window.addEventListener("load", () => {
-
-const hash =
-window.location.hash.replace("#","");
-
-if(hash){
-
-switchTab(hash);
-
+// ─── CLAUDE API ───────────────────────────────────────────────────────────
+async function callClaude(messages, system = NUTRITION_CONTEXT) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system, messages })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content[0].text;
 }
 
+// ─── CHAT ────────────────────────────────────────────────────────────────
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !apiKey) { if (!apiKey) openModal(); return; }
+
+  appendMsg('user', text);
+  input.value = '';
+  chatHistory.push({ role: 'user', content: text });
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const reply = await callClaude(chatHistory);
+    chatHistory.push({ role: 'assistant', content: reply });
+    appendMsg('ai', reply);
+  } catch(e) {
+    appendMsg('ai', '⚠️ Error: ' + e.message);
+  }
+  btn.disabled = false; btn.innerHTML = '↑';
+}
+
+function appendMsg(role, text) {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  if (role === 'ai') {
+    div.innerHTML = `<div class="ai-label">NutriSense AI</div>${escHtml(text)}`;
+  } else {
+    div.textContent = text;
+  }
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/\n/g,'<br/>');
+}
+
+// ─── IMAGE UPLOAD ─────────────────────────────────────────────────────────
+function handleImage(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    imageBase64 = ev.target.result.split(',')[1];
+    const prev = document.getElementById('img-preview');
+    prev.src = ev.target.result; prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// drag styling
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer(); dt.items.add(file);
+    dz.querySelector('input').files = dt.files;
+    handleImage({ target: { files: [file] } });
+  }
 });
 
+// ─── MEAL ANALYZER ───────────────────────────────────────────────────────
+async function analyzeMeal() {
+  if (!apiKey) { openModal(); return; }
+  const mealText = document.getElementById('mealText').value.trim();
+  if (!mealText && !imageBase64) { alert('Please describe your meal or upload an image.'); return; }
 
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Analyzing...';
 
-async function callGemini(prompt){
-
-const response = await fetch(
-
-`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
-
+  const systemPrompt = `${NUTRITION_CONTEXT}
+You are analyzing a meal. Respond ONLY with valid JSON (no markdown, no backticks) in this exact format:
 {
-method:"POST",
+  "overall": <number 0-100>,
+  "protein": <estimated grams, number>,
+  "calories": <estimated kcal, number>,
+  "fiber": <estimated grams, number>,
+  "summary": "<2-3 sentence assessment of this meal: what's good, what to watch, one improvement suggestion>"
+}`;
 
-headers:{
-"Content-Type":"application/json"
-},
+  try {
+    let messages;
+    if (imageBase64) {
+      messages = [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
+          { type: 'text', text: mealText ? `Image + description: ${mealText}. Analyze this meal.` : 'Analyze this meal from the image.' }
+        ]
+      }];
+    } else {
+      messages = [{ role: 'user', content: `Analyze this meal: ${mealText}` }];
+    }
 
-body:JSON.stringify({
-
-contents:[
-
-{
-parts:[{ text: prompt }]
+    const raw = await callClaude(messages, systemPrompt);
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const data = JSON.parse(clean);
+    showScores(data);
+  } catch(e) {
+    alert('Analysis error: ' + e.message);
+  }
+  btn.disabled = false; btn.innerHTML = '🔍 Analyze My Meal';
 }
 
-]
+function showScores(d) {
+  const card = document.getElementById('scoreCard');
+  const grid = document.getElementById('scoreGrid');
+  const summary = document.getElementById('scoreSummary');
 
-})
+  const scoreClass = d.overall >= 70 ? '' : d.overall >= 45 ? 'warn' : 'bad';
 
-});
-
-const data = await response.json();
-
-return data.candidates?.[0]?.content?.parts?.[0]?.text
-|| "No response received.";
-
+  grid.innerHTML = `
+    <div class="score-item">
+      <div class="score-num ${scoreClass}">${d.overall}</div>
+      <div class="score-lbl">Health Score /100</div>
+    </div>
+    <div class="score-item">
+      <div class="score-num">${d.calories}</div>
+      <div class="score-lbl">Est. Calories (kcal)</div>
+    </div>
+    <div class="score-item">
+      <div class="score-num">${d.protein}g</div>
+      <div class="score-lbl">Protein</div>
+    </div>
+    <div class="score-item">
+      <div class="score-num">${d.fiber}g</div>
+      <div class="score-lbl">Fiber</div>
+    </div>
+  `;
+  summary.innerHTML = `<strong style="color:var(--lime)">AI Assessment:</strong><br/>${escHtml(d.summary)}`;
+  card.classList.add('visible');
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// ─── RAG KNOWLEDGE ───────────────────────────────────────────────────────
+async function askRAG(question) {
+  if (!question || !question.trim()) return;
+  if (!apiKey) { openModal(); return; }
 
+  const answerBox = document.getElementById('ragAnswer');
+  answerBox.classList.add('visible');
+  answerBox.innerHTML = '<span class="spinner"></span> Searching knowledge base...';
 
-async function sendChat(){
+  // fill input if from tag
+  document.getElementById('ragInput').value = question;
 
-const text =
-document.getElementById("chatInput").value;
-
-if(!text) return;
-
-document.getElementById("chatResult").innerText =
-"Thinking...";
-
-const reply =
-await callGemini(text);
-
-document.getElementById("chatResult").innerText =
-reply;
-
+  try {
+    const reply = await callClaude(
+      [{ role: 'user', content: question }],
+      RAG_CONTEXT
+    );
+    answerBox.innerHTML = `
+      <div style="font-size:0.7rem;color:var(--lime);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem;font-weight:600;">
+        📚 Knowledge Base Answer
+      </div>
+      ${escHtml(reply)}
+    `;
+  } catch(e) {
+    answerBox.innerHTML = '⚠️ Error: ' + e.message;
+  }
 }
-
-
-
-async function analyzeMeal(){
-
-const meal =
-document.getElementById("mealInput").value;
-
-if(!meal) return;
-
-document.getElementById("mealResult").innerText =
-"Analyzing meal...";
-
-const reply =
-await callGemini(
-"Analyze this meal nutritionally and suggest improvements: "
-+ meal
-);
-
-document.getElementById("mealResult").innerText =
-reply;
-
-}
-
-
-
-async function searchKnowledge(){
-
-const topic =
-document.getElementById("knowledgeInput").value;
-
-if(!topic) return;
-
-document.getElementById("knowledgeResult").innerText =
-"Searching knowledge base...";
-
-const reply =
-await callGemini(
-"Explain this nutrition topic clearly: "
-+ topic
-);
-
-document.getElementById("knowledgeResult").innerText =
-reply;
-
-}
-
 </script>
-
 </body>
 </html>
